@@ -43,7 +43,11 @@ def json_to_csv(name, type):
 
 
 if __name__ == '__main__':
-    disease_list = ['心房颤动']
+    disease_list = []
+    with open('disease_name.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            disease_list.append(line.strip('\n').split(',')[0])
+        print(disease_list)
     num = len(disease_list)
     for index, value in enumerate(disease_list):
         print(str(index + 1) + '/' + str(num) + '正在获取"' + value + '"数据...')
