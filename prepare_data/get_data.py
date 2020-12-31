@@ -15,15 +15,15 @@ def get_data(name, type):
     print(json_obj)
     print('json数据打印结束！')
 
-    file_name = './' + type + '/json_data/' + name + '.json'
+    file_name = '../' + type + '/json_data/' + name + '.json'
     fp = open(file_name, 'w', encoding='utf-8')
     json.dump(json_obj, fp=fp, ensure_ascii=False)
     print('json数据存储结束！')
 
 
 def json_to_csv(name, type):
-    json_path = './' + type + '/json_data/' + name + '.json'
-    csv_path = './' + type + '/csv_data/' + name + '.csv'
+    json_path = '../' + type + '/json_data/' + name + '.json'
+    csv_path = '../' + type + '/csv_data/' + name + '.csv'
 
     json_data = None
     row_list = []
