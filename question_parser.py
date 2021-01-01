@@ -93,9 +93,8 @@ class QuestionPaser:
 
         # 查询症状会导致哪些疾病
         elif question_type == 'clinicalManifestations_disease':
-            sql = [
-                "MATCH (m:disease)-[r:r_clinicalManifestations]->(n:clinicalManifestations) where m.diseaseName =" \
-                " '{0}' return m.diseaseName, n.clinicalManifestationsName".format(i) for i in entities]
+            sql = ["MATCH (m:disease)-[r:r_clinicalManifestations]->(n:clinicalManifestations) where " \
+                   "n.clinicalManifestationsName = '{0}' return m.diseaseName, n.clinicalManifestationsName".format(i) for i in entities]
 
         # 查询疾病的原因
         elif question_type == 'disease_cause':

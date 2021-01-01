@@ -32,100 +32,85 @@ class AnswerSearcher:
         final_answer = []
         if not answers:
             return ''
-        if question_type == 'disease_symptom':
-            desc = [i['n.name'] for i in answers]
-            subject = answers[0]['m.name']
+        if question_type == 'disease_clinicalManifestations':
+            desc = [i['n.clinicalManifestationsName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
             final_answer = '{0}的症状包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'symptom_disease':
-            desc = [i['m.name'] for i in answers]
-            subject = answers[0]['n.name']
+        elif question_type == 'clinicalManifestations_disease':
+            desc = [i['m.diseaseName'] for i in answers]
+            subject = answers[0]['n.clinicalManifestationsName']
             final_answer = '症状{0}可能染上的疾病有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         elif question_type == 'disease_cause':
-            desc = [i['m.cause'] for i in answers]
-            subject = answers[0]['m.name']
+            desc = [i['n.causeName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
             final_answer = '{0}可能的成因有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_prevent':
-            desc = [i['m.prevent'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}的预防措施包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+        elif question_type == 'disease_relatedDiseases':
+            desc = [i['n.relatedDiseasesName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的相关疾病包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_lasttime':
-            desc = [i['m.cure_lasttime'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}治疗可能持续的周期为：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+        elif question_type == 'disease_site':
+            desc = [i['n.diseaseSiteName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的发病部位有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_cureway':
-            desc = [';'.join(i['m.cure_way']) for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}可以尝试如下治疗：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+        elif question_type == 'site_disease':
+            desc = [i['m.diseaseName'] for i in answers]
+            subject = answers[0]['n.diseaseSiteName']
+            final_answer = '发病部位{0}可能的疾病有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_cureprob':
-            desc = [i['m.cured_prob'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}治愈的概率为（仅供参考）：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
-
-        elif question_type == 'disease_easyget':
-            desc = [i['m.easy_get'] for i in answers]
-            subject = answers[0]['m.name']
-
-            final_answer = '{0}的易感人群包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
-
-        elif question_type == 'disease_desc':
-            desc = [i['m.desc'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0},熟悉一下：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
-
-        elif question_type == 'disease_accompany':
-            desc1 = [i['n.name'] for i in answers]
-            desc2 = [i['m.name'] for i in answers]
-            subject = answers[0]['m.name']
-            desc = [i for i in desc1 + desc2 if i != subject]
-            final_answer = '{0}的症状包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
-
-        elif question_type == 'disease_not_food':
-            desc = [i['n.name'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}忌食的食物包括有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
-
-        elif question_type == 'disease_do_food':
-            do_desc = [i['n.name'] for i in answers if i['r.name'] == '宜吃']
-            recommand_desc = [i['n.name'] for i in answers if i['r.name'] == '推荐食谱']
-            subject = answers[0]['m.name']
-            final_answer = '{0}宜食的食物包括有：{1}\n推荐食谱包括有：{2}'.format(subject, ';'.join(list(set(do_desc))[:self.num_limit]),
-                                                                 ';'.join(list(set(recommand_desc))[:self.num_limit]))
-
-        elif question_type == 'food_not_disease':
-            desc = [i['m.name'] for i in answers]
-            subject = answers[0]['n.name']
-            final_answer = '患有{0}的人最好不要吃{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
-
-        elif question_type == 'food_do_disease':
-            desc = [i['m.name'] for i in answers]
-            subject = answers[0]['n.name']
-            final_answer = '患有{0}的人建议多试试{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
+        elif question_type == 'disease_taboo':
+            desc = [i['n.taboosName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的禁忌药品有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         elif question_type == 'disease_drug':
-            desc = [i['n.name'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}通常的使用的药品包括：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+            desc = [i['n.treatmentName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的治疗药物有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         elif question_type == 'drug_disease':
-            desc = [i['m.name'] for i in answers]
-            subject = answers[0]['n.name']
-            final_answer = '{0}主治的疾病有{1},可以试试'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+            desc = [i['m.diseaseName'] for i in answers]
+            subject = answers[0]['n.treatmentName']
+            final_answer = '{0}可以治疗的疾病有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_check':
-            desc = [i['n.name'] for i in answers]
-            subject = answers[0]['m.name']
-            final_answer = '{0}通常可以通过以下方式检查出来：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+        elif question_type == 'disease_checks':
+            desc = [i['n.checksName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的检查方式有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'check_disease':
-            desc = [i['m.name'] for i in answers]
-            subject = answers[0]['n.name']
-            final_answer = '通常可以通过{0}检查出来的疾病有{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+        elif question_type == 'disease_diagnosis':
+            desc = [i['n.diagnosisName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的诊断方式有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+
+        elif question_type == 'disease_prevention':
+            desc = [i['n.preventionName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的预防方式有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+
+        elif question_type == 'disease_treatment':
+            desc = [i['n.treatmentName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的治疗方式有：{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
+
+        elif question_type == 'disease_doctors':
+            desc = [i['n.relatedDoctorsName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}的相关医生有：{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
+
+        elif question_type == 'disease_desc':
+            desc = [i['m.diseaseName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+
+        elif question_type == 'clinicalManifestations_disease':
+            desc = [i['m.diseaseName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         return final_answer
 
