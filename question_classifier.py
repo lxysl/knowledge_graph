@@ -5,50 +5,66 @@ import ahocorasick
 class QuestionClassifier:
     def __init__(self):
         cur_dir = '/'.join(os.path.abspath(__file__).split('/')[:-1])
-        # 　特征词路径
+        # 特征词路径
         self.disease_path = os.path.join(cur_dir, 'dict/disease.txt')
         self.department_path = os.path.join(cur_dir, 'dict/department.txt')
-        self.check_path = os.path.join(cur_dir, 'dict/check.txt')
-        self.drug_path = os.path.join(cur_dir, 'dict/treatment.txt')
-        self.food_path = os.path.join(cur_dir, 'dict/food.txt')
-        self.producer_path = os.path.join(cur_dir, 'dict/producer.txt')
-        self.symptom_path = os.path.join(cur_dir, 'dict/symptom.txt')
+        self.checks_path = os.path.join(cur_dir, 'dict/checks.txt')
+        self.cause_path = os.path.join(cur_dir, 'dict/cause.txt')
+        self.clinicalManifestations_path = os.path.join(cur_dir, 'dict/clinicalManifestations.txt')
+        self.diagnosis_path = os.path.join(cur_dir, 'dict/diagnosis.txt')
+        self.diseaseSite_path = os.path.join(cur_dir, 'dict/diseaseSite.txt')
+        self.prevention_path = os.path.join(cur_dir, 'dict/prevention.txt')
+        self.relatedDoctors_path = os.path.join(cur_dir, 'dict/relatedDoctors.txt')
+        self.taboo_path = os.path.join(cur_dir, 'dict/taboo.txt')
+        self.treatment_path = os.path.join(cur_dir, 'dict/treatment.txt')
+        self.relatedDiseases_path = os.path.join(cur_dir, 'dict/relatedDiseases.txt')
         self.deny_path = os.path.join(cur_dir, 'dict/deny.txt')
         # 加载特征词
         self.disease_wds = [i.strip() for i in open(self.disease_path) if i.strip()]
         self.department_wds = [i.strip() for i in open(self.department_path) if i.strip()]
-        self.check_wds = [i.strip() for i in open(self.check_path) if i.strip()]
-        self.drug_wds = [i.strip() for i in open(self.drug_path) if i.strip()]
-        self.food_wds = [i.strip() for i in open(self.food_path) if i.strip()]
-        self.producer_wds = [i.strip() for i in open(self.producer_path) if i.strip()]
-        self.symptom_wds = [i.strip() for i in open(self.symptom_path) if i.strip()]
+        self.checks_wds = [i.strip() for i in open(self.checks_path) if i.strip()]
+        self.cause_wds = [i.strip() for i in open(self.cause_path) if i.strip()]
+        self.clinicalManifestations_wds = [i.strip() for i in open(self.clinicalManifestations_path) if i.strip()]
+        self.diagnosis_wds = [i.strip() for i in open(self.diagnosis_path) if i.strip()]
+        self.diseaseSite_wds = [i.strip() for i in open(self.diseaseSite_path) if i.strip()]
+        self.prevention_wds = [i.strip() for i in open(self.prevention_path) if i.strip()]
+        self.relatedDoctors_wds = [i.strip() for i in open(self.relatedDoctors_path) if i.strip()]
+        self.taboo_wds = [i.strip() for i in open(self.taboo_path) if i.strip()]
+        self.treatment_wds = [i.strip() for i in open(self.treatment_path) if i.strip()]
+        self.relatedDiseases_wds = [i.strip() for i in open(self.relatedDiseases_path) if i.strip()]
         self.region_words = set(
-            self.department_wds + self.disease_wds + self.check_wds + self.drug_wds + self.food_wds + self.producer_wds + self.symptom_wds)
+            self.department_wds + self.disease_wds + self.checks_wds + self.cause_wds +
+            self.clinicalManifestations_wds + self.diseaseSite_wds + self.diagnosis_wds + self.treatment_wds +
+            self.prevention_wds + self.taboo_wds + self.relatedDoctors_wds + self.relatedDoctors_wds)
         self.deny_words = [i.strip() for i in open(self.deny_path) if i.strip()]
         # 构造领域actree
         self.region_tree = self.build_actree(list(self.region_words))
         # 构建词典
         self.wdtype_dict = self.build_wdtype_dict()
         # 问句疑问词
-        self.symptom_qwds = ['症状', '表征', '现象', '症候', '表现']
-        self.cause_qwds = ['原因', '成因', '为什么', '怎么会', '怎样才', '咋样才', '怎样会', '如何会', '为啥', '为何', '如何才会', '怎么才会', '会导致',
-                           '会造成']
-        self.acompany_qwds = ['并发症', '并发', '一起发生', '一并发生', '一起出现', '一并出现', '一同发生', '一同出现', '伴随发生', '伴随', '共现']
-        self.food_qwds = ['饮食', '饮用', '吃', '食', '伙食', '膳食', '喝', '菜', '忌口', '补品', '保健品', '食谱', '菜谱', '食用', '食物', '补品']
+        self.clinicalManifestations_qwds = ['症状', '表征', '现象', '症候', '表现']
+        self.causes_qwds = ['原因', '成因', '为什么', '怎么会', '怎样才', '咋样才', '怎样会', '如何会', '为啥', '为何', '如何才会', '怎么才会', '会导致',
+                            '会造成']
+        self.relatedDiseases_qwds = ['并发症', '并发', '一起发生', '一并发生', '一起出现', '一并出现', '一同发生', '一同出现', '伴随发生', '伴随', '共现']
+        # self.food_qwds = ['饮食', '饮用', '吃', '食', '伙食', '膳食', '喝', '菜', '忌口', '补品', '保健品', '食谱', '菜谱', '食用', '食物', '补品']
         self.drug_qwds = ['药', '药品', '用药', '胶囊', '口服液', '炎片']
-        self.prevent_qwds = ['预防', '防范', '抵制', '抵御', '防止', '躲避', '逃避', '避开', '免得', '逃开', '避开', '避掉', '躲开', '躲掉', '绕开',
-                             '怎样才能不', '怎么才能不', '咋样才能不', '咋才能不', '如何才能不',
-                             '怎样才不', '怎么才不', '咋样才不', '咋才不', '如何才不',
-                             '怎样才可以不', '怎么才可以不', '咋样才可以不', '咋才可以不', '如何可以不',
-                             '怎样才可不', '怎么才可不', '咋样才可不', '咋才可不', '如何可不']
-        self.lasttime_qwds = ['周期', '多久', '多长时间', '多少时间', '几天', '几年', '多少天', '多少小时', '几个小时', '多少年']
-        self.cureway_qwds = ['怎么治疗', '如何医治', '怎么医治', '怎么治', '怎么医', '如何治', '医治方式', '疗法', '咋治', '怎么办', '咋办', '咋治']
-        self.cureprob_qwds = ['多大概率能治好', '多大几率能治好', '治好希望大么', '几率', '几成', '比例', '可能性', '能治', '可治', '可以治', '可以医']
-        self.easyget_qwds = ['易感人群', '容易感染', '易发人群', '什么人', '哪些人', '感染', '染上', '得上']
-        self.check_qwds = ['检查', '检查项目', '查出', '检查', '测出', '试出']
+        self.prevention_qwds = ['预防', '防范', '抵制', '抵御', '防止', '躲避', '逃避', '避开', '免得', '逃开', '避开', '避掉', '躲开', '躲掉',
+                                '绕开', '怎样才能不', '怎么才能不', '咋样才能不', '咋才能不', '如何才能不',
+                                '怎样才不', '怎么才不', '咋样才不', '咋才不', '如何才不',
+                                '怎样才可以不', '怎么才可以不', '咋样才可以不', '咋才可以不', '如何可以不',
+                                '怎样才可不', '怎么才可不', '咋样才可不', '咋才可不', '如何可不']
+        # self.lasttime_qwds = ['周期', '多久', '多长时间', '多少时间', '几天', '几年', '多少天', '多少小时', '几个小时', '多少年']
+        self.treatment_qwds = ['怎么治疗', '如何医治', '怎么医治', '怎么治', '怎么医', '如何治', '医治方式', '疗法', '咋治', '怎么办', '咋办', '咋治']
+        # self.cureprob_qwds = ['多大概率能治好', '多大几率能治好', '治好希望大么', '几率', '几成', '比例', '可能性', '能治', '可治', '可以治', '可以医']
+        # self.easyget_qwds = ['易感人群', '容易感染', '易发人群', '什么人', '哪些人', '感染', '染上', '得上']
+        self.checks_qwds = ['检查', '检查项目', '查出', '检查', '测出', '试出']
         self.belong_qwds = ['属于什么科', '属于', '什么科', '科室']
+        self.diagnosis_qwds = ['诊断', '诊治', '诊疗']
+        self.diseaseSite_qwds = ['部位', '位置', '哪']
         self.cure_qwds = ['治疗什么', '治啥', '治疗啥', '医治啥', '治愈啥', '主治啥', '主治什么', '有什么用', '有何用', '用处', '用途',
                           '有什么好处', '有什么益处', '有何益处', '用来', '用来做啥', '用来作甚', '需要', '要']
+        self.taboo_qwds = ['禁忌', '忌讳', '忌口', '禁忌药物']
+        self.relatedDoctors_qwds = ['名医', '医生', '医师']
 
         print('model init finished ......')
 
@@ -71,84 +87,83 @@ class QuestionClassifier:
         question_types = []
 
         # 症状
-        if self.check_words(self.symptom_qwds, question) and ('disease' in types):
+        # 疾病有哪些症状
+        if self.check_words(self.clinicalManifestations_qwds, question) and ('disease' in types):
             question_type = 'disease_symptom'
             question_types.append(question_type)
 
-        if self.check_words(self.symptom_qwds, question) and ('symptom' in types):
+        # 症状会导致哪些疾病
+        if self.check_words(self.clinicalManifestations_qwds, question) and ('clinicalManifestations' in types):
             question_type = 'symptom_disease'
             question_types.append(question_type)
 
         # 原因
-        if self.check_words(self.cause_qwds, question) and ('disease' in types):
+        if self.check_words(self.causes_qwds, question) and ('disease' in types):
             question_type = 'disease_cause'
             question_types.append(question_type)
+
         # 并发症
-        if self.check_words(self.acompany_qwds, question) and ('disease' in types):
-            question_type = 'disease_acompany'
+        if self.check_words(self.relatedDiseases_qwds, question) and ('disease' in types):
+            question_type = 'disease_accompany'
             question_types.append(question_type)
 
-        # 推荐食品
-        if self.check_words(self.food_qwds, question) and 'disease' in types:
-            deny_status = self.check_words(self.deny_words, question)
-            if deny_status:
-                question_type = 'disease_not_food'
-            else:
-                question_type = 'disease_do_food'
+        # 发病部位
+        if self.check_words(self.diseaseSite_qwds, question) and ('disease' in types):
+            question_type = 'disease_site'
             question_types.append(question_type)
 
-        # 已知食物找疾病
-        if self.check_words(self.food_qwds + self.cure_qwds, question) and 'food' in types:
-            deny_status = self.check_words(self.deny_words, question)
-            if deny_status:
-                question_type = 'food_not_disease'
-            else:
-                question_type = 'food_do_disease'
+        # 症状会导致哪些疾病
+        if self.check_words(self.diseaseSite_qwds, question) and ('diseaseSite' in types):
+            question_type = 'site_disease'
             question_types.append(question_type)
 
         # 推荐药品
         if self.check_words(self.drug_qwds, question) and 'disease' in types:
-            question_type = 'disease_drug'
+            deny_status = self.check_words(self.deny_words, question)
+            if deny_status:
+                question_type = 'disease_taboo'
+            else:
+                question_type = 'disease_drug'
             question_types.append(question_type)
 
         # 药品治啥病
-        if self.check_words(self.cure_qwds, question) and 'drug' in types:
+        if self.check_words(self.treatment_qwds, question) and 'treatment' in types:
             question_type = 'drug_disease'
             question_types.append(question_type)
 
         # 疾病接受检查项目
-        if self.check_words(self.check_qwds, question) and 'disease' in types:
+        if self.check_words(self.checks_qwds, question) and 'disease' in types:
             question_type = 'disease_check'
             question_types.append(question_type)
 
         # 已知检查项目查相应疾病
-        if self.check_words(self.check_qwds + self.cure_qwds, question) and 'check' in types:
+        if self.check_words(self.checks_qwds + self.treatment_qwds, question) and 'checks' in types:
             question_type = 'check_disease'
             question_types.append(question_type)
 
-        # 　症状防御
-        if self.check_words(self.prevent_qwds, question) and 'disease' in types:
+        # 疾病接受诊断项目
+        if self.check_words(self.diagnosis_qwds, question) and 'disease' in types:
+            question_type = 'disease_diagnosis'
+            question_types.append(question_type)
+
+        # 已知诊断项目查相应疾病
+        if self.check_words(self.diagnosis_qwds + self.treatment_qwds, question) and 'checks' in types:
+            question_type = 'diagnosis_disease'
+            question_types.append(question_type)
+
+        # 症状预防
+        if self.check_words(self.prevention_qwds, question) and 'disease' in types:
             question_type = 'disease_prevent'
             question_types.append(question_type)
 
-        # 疾病医疗周期
-        if self.check_words(self.lasttime_qwds, question) and 'disease' in types:
-            question_type = 'disease_lasttime'
-            question_types.append(question_type)
-
         # 疾病治疗方式
-        if self.check_words(self.cureway_qwds, question) and 'disease' in types:
+        if self.check_words(self.treatment_qwds, question) and 'disease' in types:
             question_type = 'disease_cureway'
             question_types.append(question_type)
 
-        # 疾病治愈可能性
-        if self.check_words(self.cureprob_qwds, question) and 'disease' in types:
-            question_type = 'disease_cureprob'
-            question_types.append(question_type)
-
-        # 疾病易感染人群
-        if self.check_words(self.easyget_qwds, question) and 'disease' in types:
-            question_type = 'disease_easyget'
+        # 疾病相关医生
+        if self.check_words(self.relatedDoctors_qwds, question) and 'disease' in types:
+            question_type = 'disease_doctors'
             question_types.append(question_type)
 
         # 若没有查到相关的外部查询信息，那么则将该疾病的描述信息返回
@@ -174,16 +189,26 @@ class QuestionClassifier:
                 wd_dict[wd].append('disease')
             if wd in self.department_wds:
                 wd_dict[wd].append('department')
-            if wd in self.check_wds:
-                wd_dict[wd].append('check')
-            if wd in self.drug_wds:
-                wd_dict[wd].append('drug')
-            if wd in self.food_wds:
-                wd_dict[wd].append('food')
-            if wd in self.symptom_wds:
-                wd_dict[wd].append('symptom')
-            if wd in self.producer_wds:
-                wd_dict[wd].append('producer')
+            if wd in self.checks_wds:
+                wd_dict[wd].append('checks')
+            if wd in self.cause_wds:
+                wd_dict[wd].append('cause')
+            if wd in self.clinicalManifestations_wds:
+                wd_dict[wd].append('clinicalManifestations')
+            if wd in self.diagnosis_wds:
+                wd_dict[wd].append('diagnosis')
+            if wd in self.diseaseSite_wds:
+                wd_dict[wd].append('diseaseSite')
+            if wd in self.prevention_wds:
+                wd_dict[wd].append('prevention')
+            if wd in self.relatedDoctors_wds:
+                wd_dict[wd].append('relatedDoctors')
+            if wd in self.taboo_wds:
+                wd_dict[wd].append('taboo')
+            if wd in self.treatment_wds:
+                wd_dict[wd].append('treatment')
+            if wd in self.relatedDiseases_wds:
+                wd_dict[wd].append('relatedDiseases')
         return wd_dict
 
     '''构造actree，加速过滤'''

@@ -32,7 +32,7 @@ class QuestionPaser:
             elif question_type == 'disease_cause':
                 sql = self.sql_transfer(question_type, entity_dict.get('disease'))
 
-            elif question_type == 'disease_acompany':
+            elif question_type == 'disease_accompany':
                 sql = self.sql_transfer(question_type, entity_dict.get('disease'))
 
             elif question_type == 'disease_not_food':
@@ -133,7 +133,7 @@ class QuestionPaser:
                     i) for i in entities]
 
         # 查询疾病的并发症
-        elif question_type == 'disease_acompany':
+        elif question_type == 'disease_accompany':
             sql1 = [
                 "MATCH (m:Disease)-[r:acompany_with]->(n:Disease) where m.name = '{0}' return m.name, r.name, n.name".format(
                     i) for i in entities]

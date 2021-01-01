@@ -78,7 +78,7 @@ class AnswerSearcher:
             subject = answers[0]['m.name']
             final_answer = '{0},熟悉一下：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
-        elif question_type == 'disease_acompany':
+        elif question_type == 'disease_accompany':
             desc1 = [i['n.name'] for i in answers]
             desc2 = [i['m.name'] for i in answers]
             subject = answers[0]['m.name']
