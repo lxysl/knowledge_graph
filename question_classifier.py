@@ -6,19 +6,19 @@ class QuestionClassifier:
     def __init__(self):
         cur_dir = '/'.join(os.path.abspath(__file__).split('/')[:-1])
         # 特征词路径
-        self.disease_path = os.path.join(cur_dir, 'dict/disease.txt')
-        self.department_path = os.path.join(cur_dir, 'dict/department.txt')
-        self.checks_path = os.path.join(cur_dir, 'dict/checks.txt')
-        self.cause_path = os.path.join(cur_dir, 'dict/cause.txt')
-        self.clinicalManifestations_path = os.path.join(cur_dir, 'dict/clinicalManifestations.txt')
-        self.diagnosis_path = os.path.join(cur_dir, 'dict/diagnosis.txt')
-        self.diseaseSite_path = os.path.join(cur_dir, 'dict/diseaseSite.txt')
-        self.prevention_path = os.path.join(cur_dir, 'dict/prevention.txt')
-        self.relatedDoctors_path = os.path.join(cur_dir, 'dict/relatedDoctors.txt')
-        self.taboo_path = os.path.join(cur_dir, 'dict/taboo.txt')
-        self.treatment_path = os.path.join(cur_dir, 'dict/treatment.txt')
-        self.relatedDiseases_path = os.path.join(cur_dir, 'dict/relatedDiseases.txt')
-        self.deny_path = os.path.join(cur_dir, 'dict/deny.txt')
+        self.disease_path = os.path.join(cur_dir, './dict/disease.txt')
+        self.department_path = os.path.join(cur_dir, './dict/department.txt')
+        self.checks_path = os.path.join(cur_dir, './dict/checks.txt')
+        self.cause_path = os.path.join(cur_dir, './dict/cause.txt')
+        self.clinicalManifestations_path = os.path.join(cur_dir, './dict/clinicalManifestations.txt')
+        self.diagnosis_path = os.path.join(cur_dir, './dict/diagnosis.txt')
+        self.diseaseSite_path = os.path.join(cur_dir, './dict/diseaseSite.txt')
+        self.prevention_path = os.path.join(cur_dir, './dict/prevention.txt')
+        self.relatedDoctors_path = os.path.join(cur_dir, './dict/relatedDoctors.txt')
+        self.taboo_path = os.path.join(cur_dir, './dict/taboos.txt')
+        self.treatment_path = os.path.join(cur_dir, './dict/treatment.txt')
+        self.relatedDiseases_path = os.path.join(cur_dir, './dict/relatedDiseases.txt')
+        self.deny_path = os.path.join(cur_dir, './dict/deny.txt')
         # 加载特征词
         self.disease_wds = [i.strip() for i in open(self.disease_path) if i.strip()]
         self.department_wds = [i.strip() for i in open(self.department_path) if i.strip()]
@@ -89,22 +89,22 @@ class QuestionClassifier:
         # 症状
         # 疾病有哪些症状
         if self.check_words(self.clinicalManifestations_qwds, question) and ('disease' in types):
-            question_type = 'disease_symptom'
+            question_type = 'disease_clinicalManifestations'
             question_types.append(question_type)
 
         # 症状会导致哪些疾病
         if self.check_words(self.clinicalManifestations_qwds, question) and ('clinicalManifestations' in types):
-            question_type = 'symptom_disease'
+            question_type = 'clinicalManifestations_disease'
             question_types.append(question_type)
 
-        # 原因
+        # 病因
         if self.check_words(self.causes_qwds, question) and ('disease' in types):
             question_type = 'disease_cause'
             question_types.append(question_type)
 
         # 并发症
         if self.check_words(self.relatedDiseases_qwds, question) and ('disease' in types):
-            question_type = 'disease_accompany'
+            question_type = 'disease_relatedDiseases'
             question_types.append(question_type)
 
         # 发病部位
@@ -133,12 +133,7 @@ class QuestionClassifier:
 
         # 疾病接受检查项目
         if self.check_words(self.checks_qwds, question) and 'disease' in types:
-            question_type = 'disease_check'
-            question_types.append(question_type)
-
-        # 已知检查项目查相应疾病
-        if self.check_words(self.checks_qwds + self.treatment_qwds, question) and 'checks' in types:
-            question_type = 'check_disease'
+            question_type = 'disease_checks'
             question_types.append(question_type)
 
         # 疾病接受诊断项目
@@ -146,19 +141,14 @@ class QuestionClassifier:
             question_type = 'disease_diagnosis'
             question_types.append(question_type)
 
-        # 已知诊断项目查相应疾病
-        if self.check_words(self.diagnosis_qwds + self.treatment_qwds, question) and 'checks' in types:
-            question_type = 'diagnosis_disease'
-            question_types.append(question_type)
-
         # 症状预防
         if self.check_words(self.prevention_qwds, question) and 'disease' in types:
-            question_type = 'disease_prevent'
+            question_type = 'disease_prevention'
             question_types.append(question_type)
 
         # 疾病治疗方式
         if self.check_words(self.treatment_qwds, question) and 'disease' in types:
-            question_type = 'disease_cureway'
+            question_type = 'disease_treatment'
             question_types.append(question_type)
 
         # 疾病相关医生
@@ -171,8 +161,8 @@ class QuestionClassifier:
             question_types = ['disease_desc']
 
         # 若没有查到相关的外部查询信息，那么则将该疾病的描述信息返回
-        if question_types == [] and 'symptom' in types:
-            question_types = ['symptom_disease']
+        if question_types == [] and 'clinicalManifestations' in types:
+            question_types = ['clinicalManifestations_disease']
 
         # 将多个分类结果进行合并处理，组装成一个字典
         data['question_types'] = question_types
@@ -204,7 +194,7 @@ class QuestionClassifier:
             if wd in self.relatedDoctors_wds:
                 wd_dict[wd].append('relatedDoctors')
             if wd in self.taboo_wds:
-                wd_dict[wd].append('taboo')
+                wd_dict[wd].append('taboos')
             if wd in self.treatment_wds:
                 wd_dict[wd].append('treatment')
             if wd in self.relatedDiseases_wds:
