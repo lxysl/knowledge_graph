@@ -52,6 +52,9 @@ class QuestionPaser:
             elif question_type == 'disease_checks':
                 sql = self.sql_transfer(question_type, entity_dict.get('disease'))
 
+            elif question_type == 'disease_department':
+                sql = self.sql_transfer(question_type, entity_dict.get('disease'))
+
             elif question_type == 'disease_diagnosis':
                 sql = self.sql_transfer(question_type, entity_dict.get('disease'))
 
@@ -135,6 +138,11 @@ class QuestionPaser:
         elif question_type == 'disease_checks':
             sql = ["match (m:disease)-[r:r_checks]->(n:checks) where m.diseaseName = '{0}' " \
                    "return m.diseaseName, n.checksName".format(i) for i in entities]
+
+        # 查询疾病属于哪个科室
+        elif question_type == 'disease_department':
+            sql = ["match (m:disease)-[r:r_department]->(n:department) where m.diseaseName = '{0}' " \
+                   "return m.diseaseName, n.departmentName".format(i) for i in entities]
 
         # 查询疾病的诊断方式
         elif question_type == 'disease_diagnosis':

@@ -82,6 +82,11 @@ class AnswerSearcher:
             subject = answers[0]['m.diseaseName']
             final_answer = '{0}的检查方式有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
+        elif question_type == 'disease_department':
+            desc = [i['n.departmentName'] for i in answers]
+            subject = answers[0]['m.diseaseName']
+            final_answer = '{0}所属的科室为：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
+
         elif question_type == 'disease_diagnosis':
             desc = [i['n.diagnosisName'] for i in answers]
             subject = answers[0]['m.diseaseName']
@@ -95,12 +100,12 @@ class AnswerSearcher:
         elif question_type == 'disease_treatment':
             desc = [i['n.treatmentName'] for i in answers]
             subject = answers[0]['m.diseaseName']
-            final_answer = '{0}的治疗方式有：{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
+            final_answer = '{0}的治疗方式有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         elif question_type == 'disease_doctors':
             desc = [i['n.relatedDoctorsName'] for i in answers]
             subject = answers[0]['m.diseaseName']
-            final_answer = '{0}的相关医生有：{1}'.format('；'.join(list(set(desc))[:self.num_limit]), subject)
+            final_answer = '{0}的相关医生有：{1}'.format(subject, '；'.join(list(set(desc))[:self.num_limit]))
 
         elif question_type == 'disease_desc':
             desc = [i['m.diseaseName'] for i in answers]

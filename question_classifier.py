@@ -20,23 +20,24 @@ class QuestionClassifier:
         self.relatedDiseases_path = os.path.join(cur_dir, './dict/relatedDiseases.txt')
         self.deny_path = os.path.join(cur_dir, './dict/deny.txt')
         # 加载特征词
-        self.disease_wds = [i.strip() for i in open(self.disease_path) if i.strip()]
-        self.department_wds = [i.strip() for i in open(self.department_path) if i.strip()]
-        self.checks_wds = [i.strip() for i in open(self.checks_path) if i.strip()]
-        self.cause_wds = [i.strip() for i in open(self.cause_path) if i.strip()]
-        self.clinicalManifestations_wds = [i.strip() for i in open(self.clinicalManifestations_path) if i.strip()]
-        self.diagnosis_wds = [i.strip() for i in open(self.diagnosis_path) if i.strip()]
-        self.diseaseSite_wds = [i.strip() for i in open(self.diseaseSite_path) if i.strip()]
-        self.prevention_wds = [i.strip() for i in open(self.prevention_path) if i.strip()]
-        self.relatedDoctors_wds = [i.strip() for i in open(self.relatedDoctors_path) if i.strip()]
-        self.taboo_wds = [i.strip() for i in open(self.taboo_path) if i.strip()]
-        self.treatment_wds = [i.strip() for i in open(self.treatment_path) if i.strip()]
-        self.relatedDiseases_wds = [i.strip() for i in open(self.relatedDiseases_path) if i.strip()]
+        self.disease_wds = [i.strip() for i in open(self.disease_path, encoding='UTF-8') if i.strip()]
+        self.department_wds = [i.strip() for i in open(self.department_path, encoding='UTF-8') if i.strip()]
+        self.checks_wds = [i.strip() for i in open(self.checks_path, encoding='UTF-8') if i.strip()]
+        self.cause_wds = [i.strip() for i in open(self.cause_path, encoding='UTF-8') if i.strip()]
+        self.clinicalManifestations_wds = [i.strip() for i in open(self.clinicalManifestations_path, encoding='UTF-8')
+                                           if i.strip()]
+        self.diagnosis_wds = [i.strip() for i in open(self.diagnosis_path, encoding='UTF-8') if i.strip()]
+        self.diseaseSite_wds = [i.strip() for i in open(self.diseaseSite_path, encoding='UTF-8') if i.strip()]
+        self.prevention_wds = [i.strip() for i in open(self.prevention_path, encoding='UTF-8') if i.strip()]
+        self.relatedDoctors_wds = [i.strip() for i in open(self.relatedDoctors_path, encoding='UTF-8') if i.strip()]
+        self.taboo_wds = [i.strip() for i in open(self.taboo_path, encoding='UTF-8') if i.strip()]
+        self.treatment_wds = [i.strip() for i in open(self.treatment_path, encoding='UTF-8') if i.strip()]
+        self.relatedDiseases_wds = [i.strip() for i in open(self.relatedDiseases_path, encoding='UTF-8') if i.strip()]
         self.region_words = set(
             self.department_wds + self.disease_wds + self.checks_wds + self.cause_wds +
             self.clinicalManifestations_wds + self.diseaseSite_wds + self.diagnosis_wds + self.treatment_wds +
             self.prevention_wds + self.taboo_wds + self.relatedDoctors_wds + self.relatedDoctors_wds)
-        self.deny_words = [i.strip() for i in open(self.deny_path) if i.strip()]
+        self.deny_words = [i.strip() for i in open(self.deny_path, encoding='UTF-8') if i.strip()]
         # 构造领域actree
         self.region_tree = self.build_actree(list(self.region_words))
         # 构建词典
@@ -44,7 +45,7 @@ class QuestionClassifier:
         # 问句疑问词
         self.clinicalManifestations_qwds = ['症状', '表征', '现象', '症候', '表现']
         self.causes_qwds = ['原因', '成因', '为什么', '怎么会', '怎样才', '咋样才', '怎样会', '如何会', '为啥', '为何', '如何才会', '怎么才会', '会导致',
-                            '会造成']
+                            '会造成', '病因']
         self.relatedDiseases_qwds = ['并发症', '并发', '一起发生', '一并发生', '一起出现', '一并出现', '一同发生', '一同出现', '伴随发生', '伴随', '共现']
         # self.food_qwds = ['饮食', '饮用', '吃', '食', '伙食', '膳食', '喝', '菜', '忌口', '补品', '保健品', '食谱', '菜谱', '食用', '食物', '补品']
         self.drug_qwds = ['药', '药品', '用药', '胶囊', '口服液', '炎片']
@@ -58,9 +59,9 @@ class QuestionClassifier:
         # self.cureprob_qwds = ['多大概率能治好', '多大几率能治好', '治好希望大么', '几率', '几成', '比例', '可能性', '能治', '可治', '可以治', '可以医']
         # self.easyget_qwds = ['易感人群', '容易感染', '易发人群', '什么人', '哪些人', '感染', '染上', '得上']
         self.checks_qwds = ['检查', '检查项目', '查出', '检查', '测出', '试出']
-        self.belong_qwds = ['属于什么科', '属于', '什么科', '科室']
+        self.department_qwds = ['属于什么科', '属于', '什么科', '科室', '科']
         self.diagnosis_qwds = ['诊断', '诊治', '诊疗']
-        self.diseaseSite_qwds = ['部位', '位置', '哪']
+        self.diseaseSite_qwds = ['部位', '位置', '疼', '痛', '疼痛', '不舒服', '难受']
         self.cure_qwds = ['治疗什么', '治啥', '治疗啥', '医治啥', '治愈啥', '主治啥', '主治什么', '有什么用', '有何用', '用处', '用途',
                           '有什么好处', '有什么益处', '有何益处', '用来', '用来做啥', '用来作甚', '需要', '要']
         self.taboo_qwds = ['禁忌', '忌讳', '忌口', '禁忌药物']
@@ -134,6 +135,11 @@ class QuestionClassifier:
         # 疾病接受检查项目
         if self.check_words(self.checks_qwds, question) and 'disease' in types:
             question_type = 'disease_checks'
+            question_types.append(question_type)
+
+        # 疾病属于哪个科室
+        if self.check_words(self.department_qwds, question) and 'disease' in types:
+            question_type = 'disease_department'
             question_types.append(question_type)
 
         # 疾病接受诊断项目
