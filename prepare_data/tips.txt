@@ -27,3 +27,4 @@
 禁忌,33,10,8,0
 
 清空数据库：MATCH (n) detach delete n
+修改密码：:server change-password
