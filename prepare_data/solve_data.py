@@ -2,9 +2,8 @@ import pandas as pd
 from py2neo import Graph, Node, Relationship
 
 neo_graph = Graph(
-    "http://localhost:7474",
-    username="neo4j",
-    password="neo4j"
+    "neo4j://localhost:7687",
+    auth=("neo4j", "12345678")
 )
 
 labels = {'病因': 'cause',
@@ -71,7 +70,7 @@ def solve_data(name, type):
             if label_name == '预防':
                 target_node = Node(label_value, preventionName=i[0]) if (n := neo_graph.nodes.match(label_value, preventionName=i[0]).first()) is None else n
             if label_name == '危险因素':
-                target_node = Node(label_value, riskFactiorsName=i[0]) if (n := neo_graph.nodes.match(label_value, riskFactiorsName=i[0]).first()) is None else n
+                target_node = Node(label_value, riskFactorsName=i[0]) if (n := neo_graph.nodes.match(label_value, riskFactorsName=i[0]).first()) is None else n
             if label_name == '发病部位':
                 target_node = Node(label_value, diseaseSiteName=i[0]) if (n := neo_graph.nodes.match(label_value, diseaseSiteName=i[0]).first()) is None else n
             if label_name == '相关医生':

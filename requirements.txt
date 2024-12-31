@@ -1,0 +1,6 @@
+openai
+py2neo
+neo4j
+pandas
+requests
+pyahocorasick
