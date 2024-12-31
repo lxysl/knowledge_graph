@@ -41,7 +41,6 @@ pip install -r requirements.txt
 4. 启动 chatbot_graph.py 或 llm_chatbot.py
 
 ```
-cd ..
 python chatbot_graph.py
 python llm_chatbot.py
 ```
