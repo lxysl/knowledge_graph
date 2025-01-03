@@ -42,7 +42,7 @@ pip install -r requirements.txt
 
 ```
 python chatbot_graph.py
-python llm_chatbot.py
+python llm_chatbot.py  # 需要设置 api_key
 ```
 
 5. Enjoy your chat!

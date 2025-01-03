@@ -109,7 +109,7 @@ class AnswerFormatter:
 
 class GraphRAGChatBot:
     def __init__(self):
-        self.llm = OpenAI(api_key="sk-ba015551788a47438f4933c407d2c1fd", base_url="https://api.deepseek.com")
+        self.llm = OpenAI(api_key="sk-xxx", base_url="https://api.deepseek.com")
         self.g = Graph(
             "neo4j://localhost:7687",
             auth=("neo4j", "12345678")
